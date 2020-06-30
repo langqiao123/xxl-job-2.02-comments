@@ -67,24 +67,28 @@ public class XxlJobExecutor  {
     // ---------------------- start + stop ----------------------
     public void start() throws Exception {
 
-        // init logpath
+        // 1.init logpath 日志文件路径
         XxlJobFileAppender.initLogPath(logPath);
 
-        // init invoker, admin-client
+        // 2.init invoker, admin-client
+        //初始化RPC调用者,调度中心客户端，adminAddress可能为多个地址即多个调度中心机器
         initAdminBizList(adminAddresses, accessToken);
 
 
-        // init JobLogFileCleanThread
+        // 3.init JobLogFileCleanThread
         //清理日志文件
+        //启动日志文件清理线程
         JobLogFileCleanThread.getInstance().start(logRetentionDays);
 
-        // init TriggerCallbackThread
+        // 4.init TriggerCallbackThread
+        //初始化触发器回调线程
         TriggerCallbackThread.getInstance().start();
 
-        // init executor-server
+        // 5.init executor-server
         //如果执行器端配置的端口<=0,或者没有配置(这种情况下就是：0),就会自动去获取，会通9999-65535个端口中轮询获取当前可用的端口，new Socket(port)报不报异常
         port = port>0?port: NetUtil.findAvailablePort(9999);
         ip = (ip!=null&&ip.trim().length()>0)?ip: IpUtil.getIp();
+        //初始化RPC服务提供者xxlRpcProviderFactory
         initRpcProvider(ip, port, appName, accessToken);
     }
     public void destroy(){
@@ -122,7 +126,7 @@ public class XxlJobExecutor  {
                 if (address!=null && address.trim().length()>0) {
 
                     String addressUrl = address.concat(AdminBiz.MAPPING);
-
+                    //动态代理，获取adminBiz接口的实例对象，主要是getObject()里做了实现
                     AdminBiz adminBiz = (AdminBiz) new XxlRpcReferenceBean(
                             NetEnum.NETTY_HTTP,
                             serializer,
@@ -178,7 +182,7 @@ public class XxlJobExecutor  {
         // add services
         xxlRpcProviderFactory.addService(ExecutorBiz.class.getName(), null, new ExecutorBizImpl());
 
-        // start
+        // start，里面的具体实现调用了下面的静态类ExecutorServiceRegistry的start()方法
         xxlRpcProviderFactory.start();
 
     }
@@ -188,6 +192,7 @@ public class XxlJobExecutor  {
         @Override
         public void start(Map<String, String> param) {
             // start registry
+            //自动执行注册线程
             ExecutorRegistryThread.getInstance().start(param.get("appName"), param.get("address"));
         }
         @Override
@@ -226,7 +231,9 @@ public class XxlJobExecutor  {
 
 
     // ---------------------- job handler repository ----------------------
+    //存储jobHandler的高并发map,key:jobHandler的name，value为jobHandler的实例
     private static ConcurrentHashMap<String, IJobHandler> jobHandlerRepository = new ConcurrentHashMap<String, IJobHandler>();
+    //注册handler，即把jobhandler实例存储
     public static IJobHandler registJobHandler(String name, IJobHandler jobHandler){
         logger.info(">>>>>>>>>>> xxl-job register jobhandler success, name:{}, jobHandler:{}", name, jobHandler);
         return jobHandlerRepository.put(name, jobHandler);

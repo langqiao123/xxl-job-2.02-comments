@@ -15,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * job registry instance
+ * job注册的监视器
  * @author xuxueli 2016-10-02 19:10:24
  */
 public class JobRegistryMonitorHelper {
@@ -34,10 +35,11 @@ public class JobRegistryMonitorHelper {
 				while (!toStop) {
 					try {
 						// auto registry group
+                        //address_type,0:自动注册，1：手动注册
 						List<XxlJobGroup> groupList = XxlJobAdminConfig.getAdminConfig().getXxlJobGroupDao().findByAddressType(0);
 						if (groupList!=null && !groupList.isEmpty()) {
 
-							// remove dead address (admin/executor)
+							// remove dead address (admin/executor) from xxl_job_qrtz_trigger_registry
 							XxlJobAdminConfig.getAdminConfig().getXxlJobRegistryDao().removeDead(RegistryConfig.DEAD_TIMEOUT);
 
 							// fresh online address (admin/executor)

@@ -143,6 +143,7 @@ public class ExecutorBizImpl implements ExecutorBiz {
 
         // executor block strategy
         if (jobThread != null) {
+            //job的阻塞策略
             ExecutorBlockStrategyEnum blockStrategy = ExecutorBlockStrategyEnum.match(triggerParam.getExecutorBlockStrategy(), null);
             if (ExecutorBlockStrategyEnum.DISCARD_LATER == blockStrategy) {
                 // discard when running
@@ -162,11 +163,13 @@ public class ExecutorBizImpl implements ExecutorBiz {
         }
 
         // replace thread (new or exists invalid)
+        // 3. 把jobInfo 从 jobThreadRepository (ConcurrentMap) 中获取一个新线程，并开启新线程
         if (jobThread == null) {
             jobThread = XxlJobExecutor.registJobThread(triggerParam.getJobId(), jobHandler, removeOldReason);
         }
 
         // push data to queue
+        //保存当前线程队列
         ReturnT<String> pushResult = jobThread.pushTriggerQueue(triggerParam);
         return pushResult;
     }

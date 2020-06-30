@@ -6,12 +6,16 @@ import java.util.List;
 
 /**
  * Created by xuxueli on 16/9/30.
+ * xxl_job_qrtz_trigger_group
  */
 public class XxlJobGroup {
 
     private int id;
+    //执行器的appName
     private String appName;
+    //执行器的名称
     private String title;
+    //排序
     private int order;
     private int addressType;        // 执行器地址类型：0=自动注册、1=手动录入
     private String addressList;     // 执行器地址列表，多地址逗号分隔(手动录入)

@@ -40,11 +40,13 @@ public class ExecutorRegistryThread {
             public void run() {
 
                 // registry
+                //无限循环，通过线程休眠，不断的自旋
                 while (!toStop) {
                     try {
                         RegistryParam registryParam = new RegistryParam(RegistryConfig.RegistType.EXECUTOR.name(), appName, address);
                         for (AdminBiz adminBiz: XxlJobExecutor.getAdminBizList()) {
                             try {
+                                //注册 adminBiz.registry(registryParam)
                                 ReturnT<String> registryResult = adminBiz.registry(registryParam);
                                 if (registryResult!=null && ReturnT.SUCCESS_CODE == registryResult.getCode()) {
                                     registryResult = ReturnT.SUCCESS;
@@ -67,6 +69,7 @@ public class ExecutorRegistryThread {
 
                     try {
                         if (!toStop) {
+                            //线程休眠30s,每隔30s做一次注册更新
                             TimeUnit.SECONDS.sleep(RegistryConfig.BEAT_TIMEOUT);
                         }
                     } catch (InterruptedException e) {
@@ -77,6 +80,7 @@ public class ExecutorRegistryThread {
                 }
 
                 // registry remove
+                // 注册移除
                 try {
                     RegistryParam registryParam = new RegistryParam(RegistryConfig.RegistType.EXECUTOR.name(), appName, address);
                     for (AdminBiz adminBiz: XxlJobExecutor.getAdminBizList()) {

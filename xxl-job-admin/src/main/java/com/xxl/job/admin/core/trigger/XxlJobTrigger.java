@@ -184,6 +184,7 @@ public class XxlJobTrigger {
     }
 
     /**
+     * 调用执行器
      * run executor
      * @param triggerParam
      * @param address

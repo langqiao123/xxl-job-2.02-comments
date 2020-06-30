@@ -131,6 +131,7 @@ public class JobThread extends Thread{
 							FutureTask<ReturnT<String>> futureTask = new FutureTask<ReturnT<String>>(new Callable<ReturnT<String>>() {
 								@Override
 								public ReturnT<String> call() throws Exception {
+								    //RPC调用应用程序的job
 									return handler.execute(triggerParamTmp.getExecutorParams());
 								}
 							});

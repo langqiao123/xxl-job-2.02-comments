@@ -123,7 +123,9 @@ public class AdminBizImpl implements AdminBiz {
 
     @Override
     public ReturnT<String> registry(RegistryParam registryParam) {
+        //更新xxl_job_qrtz_trigger_registry
         int ret = xxlJobRegistryDao.registryUpdate(registryParam.getRegistGroup(), registryParam.getRegistryKey(), registryParam.getRegistryValue());
+        //如果没有更新成功，说明之前未注册，就新增一条记录
         if (ret < 1) {
             xxlJobRegistryDao.registrySave(registryParam.getRegistGroup(), registryParam.getRegistryKey(), registryParam.getRegistryValue());
         }

@@ -4,6 +4,7 @@ import java.util.Date;
 
 /**
  * Created by xuxueli on 16/9/30.
+ * 执行器注册表，维护在线的执行器和调用中心机器地址信息
  */
 public class XxlJobRegistry {
 

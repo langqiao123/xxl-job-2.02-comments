@@ -22,6 +22,7 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
     public void start() throws Exception {
 
         // init JobHandler Repository
+        //初始化作业处理器仓库
         initJobHandlerRepository(applicationContext);
 
         // refresh GlueFactory
@@ -29,6 +30,7 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
 
 
         // super start
+        //调用父类XxlJobExecutor的start方法
         super.start();
     }
 
@@ -38,6 +40,8 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
         }
 
         // init job handler action
+        //初始化作业处理器
+        //获取spring通过注解注册的bean实例，并从中取得作业handler并注册
         Map<String, Object> serviceBeanMap = applicationContext.getBeansWithAnnotation(JobHandler.class);
 
         if (serviceBeanMap!=null && serviceBeanMap.size()>0) {
@@ -46,8 +50,10 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
                     String name = serviceBean.getClass().getAnnotation(JobHandler.class).value();
                     IJobHandler handler = (IJobHandler) serviceBean;
                     if (loadJobHandler(name) != null) {
+                        //如果已经注册，就抛出名字冲突的异常
                         throw new RuntimeException("xxl-job jobhandler naming conflicts.");
                     }
+                    //注册作业handler，该方法继承自XxlJobExecutor
                     registJobHandler(name, handler);
                 }
             }

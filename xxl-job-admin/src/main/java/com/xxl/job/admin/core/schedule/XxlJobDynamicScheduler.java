@@ -159,7 +159,7 @@ public final class XxlJobDynamicScheduler {
 
     /**
      * fill job info
-     *
+     * 填充job的信息，增加cron表达式和job状态
      * @param jobInfo
      */
 	public static void fillJobInfo(XxlJobInfo jobInfo) {
