@@ -12,7 +12,7 @@ import java.util.Map;
 
 /**
  * xxl-job executor (for spring)
- *
+ * v2.0.2版本新增的执行器初始化类
  * @author xuxueli 2018-11-01 09:24:52
  */
 public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationContextAware {

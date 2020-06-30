@@ -15,6 +15,8 @@ import java.util.concurrent.TimeUnit;
 /**
  * job file clean thread
  *
+ * 清理日志文件的线程
+ *
  * @author xuxueli 2017-12-29 16:23:43
  */
 public class JobLogFileCleanThread {
@@ -100,6 +102,7 @@ public class JobLogFileCleanThread {
 
             }
         });
+        //设置为守护线程
         localThread.setDaemon(true);
         localThread.setName("xxl-job, executor JobLogFileCleanThread");
         localThread.start();

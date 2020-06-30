@@ -27,6 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by xuxueli on 2016/3/2 21:14.
+ * 这是执行器端的入口
  */
 public class XxlJobExecutor  {
     private static final Logger logger = LoggerFactory.getLogger(XxlJobExecutor.class);
@@ -74,12 +75,14 @@ public class XxlJobExecutor  {
 
 
         // init JobLogFileCleanThread
+        //清理日志文件
         JobLogFileCleanThread.getInstance().start(logRetentionDays);
 
         // init TriggerCallbackThread
         TriggerCallbackThread.getInstance().start();
 
         // init executor-server
+        //如果执行器端配置的端口<=0,或者没有配置(这种情况下就是：0),就会自动去获取，会通9999-65535个端口中轮询获取当前可用的端口，new Socket(port)报不报异常
         port = port>0?port: NetUtil.findAvailablePort(9999);
         ip = (ip!=null&&ip.trim().length()>0)?ip: IpUtil.getIp();
         initRpcProvider(ip, port, appName, accessToken);

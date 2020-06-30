@@ -19,7 +19,7 @@ public class FileUtil {
 
     /**
      * delete recursively
-     *
+     * 递归删除文件
      * @param root
      * @return
      */
