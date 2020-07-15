@@ -57,12 +57,15 @@ public final class XxlJobDynamicScheduler {
         initI18n();
 
         // admin registry monitor run
+        //启动自动注册线程，获取类型为自动注册的执行器信息，完成机器的自动注册和发现
         JobRegistryMonitorHelper.getInstance().start();
 
         // admin monitor run
+        //启动失败日志监控
         JobFailMonitorHelper.getInstance().start();
 
         // admin-server
+        //暴露adminBiz服务，并设置jettyServerHandler
         initRpcProvider();
 
         logger.info(">>>>>>>>> init xxl-job admin success.");
